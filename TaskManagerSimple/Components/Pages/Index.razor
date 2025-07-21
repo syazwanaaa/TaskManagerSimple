@@ -1,0 +1,53 @@
+﻿@page "/"
+
+<h3>📝 My Task List</h3>
+
+<div>
+    <input @bind="newTask" placeholder="Enter task title..." />
+    <button @onclick="AddTask">Add Task</button>
+</div>
+
+@if (tasks.Count == 0)
+{
+    <p>No tasks yet.</p>
+}
+else
+{
+    <ul>
+        @foreach (var task in tasks)
+        {
+            <li>
+                <input type="checkbox" @bind="task.IsCompleted" />
+                <span style="@(task.IsCompleted ? "text-decoration: line-through;" : "")">@task.Title</span>
+                <button @onclick="() => DeleteTask(task)" style="margin-left:10px;">❌</button>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    public class TaskItem
+    {
+        public string Title { get; set; } = "";
+        public bool IsCompleted { get; set; } = false;
+    }
+
+    private string newTask = "";
+    private List<TaskItem> tasks = new();
+
+    private void AddTask()
+    {
+        Console.WriteLine($"[DEBUG] AddTask called. Value: {newTask}");
+
+        if (!string.IsNullOrWhiteSpace(newTask))
+        {
+            tasks.Add(new TaskItem { Title = newTask });
+            newTask = "";
+        }
+    }
+
+    private void DeleteTask(TaskItem task)
+    {
+        tasks.Remove(task);
+    }
+}
